@@ -39,9 +39,9 @@ class Location(object):
 
         0 tag $GPGGA/$GNGGA
         1 timestamp 215840.000
-        2 latitude 0320.5609, 03 deg. 20.5609'
+        2 latitude 0320.5609, 03º 20.5609'
         3 latitude direction N
-        4 longitude 07631.7120, 07 deg 631.7120'
+        4 longitude 07631.7120, 076º 31.7120'
         5 longitude direction W
         6 fix quality
                     0 invalid                 5 Float RTK
@@ -133,7 +133,8 @@ class BU353LocProvider(object):
 
 
 if __name__ == "__main__":
-    print("hello i2t")
+    print("Hi! I'm working...")
+    print("--")
 
     gps_port = "/dev/ttyACM0"
     gps_speed = 4800
@@ -142,15 +143,24 @@ if __name__ == "__main__":
     provider = BU353LocProvider(gps_port, gps_speed, gps_timeout)
     provider.start()
 
-    networks = pynmcli.NetworkManager.Device().wifi('list').execute()
+    raw_networks = pynmcli.NetworkManager.Device().wifi('list').execute()
+    networks = pynmcli.get_data(raw_networks)
     location = provider.get_location()
 
-    print("latitude (ddmm.mmmmm)... ", location.lat, location.lat_d)
-    print("longitude (dddmm.mmmmm).", location.lon, location.lon_d)
-    print("altitude (m)............", location.alt)
-    print("satellites..............", location.satellites)
-    print(networks)
+    print("latitude (ddmm.mmmmm)............. ", location.lat, location.lat_d)
+    print("longitude (dddmm.mmmmm)...........", location.lon, location.lon_d)
+    print("altitude (m)......................", location.alt)
+    print("satellites........................", location.satellites)
+    print("Access points:")
+    print(raw_networks)
 
     provider.stop()
-    print("bye")
-    # nmcli dev wifi
+    print("Done! Bye.")
+
+
+# Final notes. Useful linux commands:
+# nmcli dev wifi
+# sudo iw dev wlp2s0 scan | egrep "signal:|SSID" | sed -e "s/\tsignal: //" -e "s/\SSID: //" | awk '{ORS = (NR % 2 == 0)? "\n" : " "; print}' | sort
+
+# Dependencies:
+# pip3 install pyserial pynmea2 pynmcli
