@@ -131,8 +131,7 @@ class BU353LocProvider(object):
         return None
 
 
-
-if __name__ == "__main__":
+def main():
     print("Hi! I'm working...")
     print("--")
 
@@ -157,6 +156,9 @@ if __name__ == "__main__":
     provider.stop()
     print("Done! Bye.")
 
+
+if __name__ == "__main__":
+    main()
 
 # Final notes. Useful linux commands:
 # nmcli dev wifi
