@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import os
+import sys
 import time
 import traceback
 import serial
 import pynmea2
 import pynmcli
+import json
 
 
 class Location(object):
@@ -169,7 +171,19 @@ def run_iw_command(filePath):
     return results
 
 
-def main():
+def save(file_path, content):
+    content_str = json.JSONEncoder().encode(content)
+
+    suffix = time.strftime("%Y%m%d_%H%M%S")
+    file_name = file_path + "_" + suffix + ".json"
+
+    with open(file_name, "w+") as f:
+        f.write(content_str)
+
+    print("file saved", file_name)
+
+
+def main(output_file):
     print("Hi! I'm working...")
     print("--")
 
@@ -190,16 +204,24 @@ def main():
     print("altitude (m)......................", location.alt)
     print("satellites........................", location.satellites)
     print("Access points:")
-    print(networks)
+    print(raw_networks)
     print("Access points details:")
     print(iw)
+
+    final = {
+        "location": { "lat": location.lat, "latd": location.lat_d, "lon": location.lon, "lond": location.lon_d, "alt": location.alt, "sat": location.satellites },
+        "nmcli": networks,
+        "iw": iw
+    }
+
+    save(output_file, final)
 
     provider.stop()
     print("Done! Bye.")
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv[1])
 
 # Final notes. Useful linux commands:
 # nmcli dev wifi
