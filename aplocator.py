@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import os
 import time
 import traceback
 import serial
@@ -131,6 +132,43 @@ class BU353LocProvider(object):
         return None
 
 
+def _get_iw_command(filePath):
+    # sudo iw dev wlp2s0 scan | egrep "on wlp2s0|signal:|SSID:" | sed -e "s/\tsignal: //" -e "s/\tSSID: //" -e "s/BSS //" -e "s/associated//" -e "s/ -- //" | awk '{ORS = (NR % 3 == 0)? "\n" : " "; print}' | sort
+    cmd = 'sudo iw dev wlp2s0 scan | egrep "on wlp2s0|signal:|SSID:" | sed -e "s/\\tsignal: //" -e "s/\\tSSID: //" -e "s/BSS //" -e "s/associated//" -e "s/ -- //" -e "s/(on wlp2s0)//" | awk \'{ORS = (NR % 3 == 0)? "\\n" : " "; print}\' | sort'
+    return cmd + " > " + filePath
+
+
+def _get_iw_command_result(filePath):
+    contents = []
+
+    with open(filePath, "r") as f:
+        for line in f:
+            contents.append(line)
+
+    return contents
+
+
+def run_iw_command(filePath):
+    os.system(_get_iw_command(filePath))
+    contents = _get_iw_command_result(filePath)
+    results = []
+
+    for c in contents:
+        line = c.replace("\n", "").replace(" dBm", "")
+        if not line.isspace():
+            i = line.split(" ")
+
+            item = {
+                "BSSID": i[0],
+                "dBm": i[1],
+                "SSID": " ".join(i[2:])
+            }
+
+            results.append(item)
+
+    return results
+
+
 def main():
     print("Hi! I'm working...")
     print("--")
@@ -145,13 +183,16 @@ def main():
     raw_networks = pynmcli.NetworkManager.Device().wifi('list').execute()
     networks = pynmcli.get_data(raw_networks)
     location = provider.get_location()
+    iw = run_iw_command("/tmp/aplocator.txt")
 
     print("latitude (ddmm.mmmmm)............. ", location.lat, location.lat_d)
     print("longitude (dddmm.mmmmm)...........", location.lon, location.lon_d)
     print("altitude (m)......................", location.alt)
     print("satellites........................", location.satellites)
     print("Access points:")
-    print(raw_networks)
+    print(networks)
+    print("Access points details:")
+    print(iw)
 
     provider.stop()
     print("Done! Bye.")
@@ -162,7 +203,8 @@ if __name__ == "__main__":
 
 # Final notes. Useful linux commands:
 # nmcli dev wifi
-# sudo iw dev wlp2s0 scan | egrep "signal:|SSID" | sed -e "s/\tsignal: //" -e "s/\SSID: //" | awk '{ORS = (NR % 2 == 0)? "\n" : " "; print}' | sort
+# sudo iw dev wlp2s0 scan | egrep "signal:|SSID:" | sed -e "s/\tsignal: //" -e "s/\tSSID: //" | awk '{ORS = (NR % 2 == 0)? "\n" : " "; print}' | sort
+# sudo iw dev wlp2s0 scan | egrep "on wlp2s0|signal:|SSID:" | sed -e "s/\tsignal: //" -e "s/\tSSID: //" -e "s/BSS //" -e "s/associated//" -e "s/ -- //" | awk '{ORS = (NR % 3 == 0)? "\n" : " "; print}' | sort
 
 # Dependencies:
 # pip3 install pyserial pynmea2 pynmcli
