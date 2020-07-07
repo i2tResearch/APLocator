@@ -6,3 +6,6 @@ gps_timeout: 5
 
 [Results]
 output_folder: /home/i2t/Dev/Output/APLocatorResults
+
+[CLI]
+tmp_cli_file: /tmp/aplocator.txt
