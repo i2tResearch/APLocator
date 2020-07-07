@@ -52,8 +52,8 @@ Open the file and setup the gps and the output folder.
 
     There is not a package for this command. The script runs it directly, stores the output on a temporary file and then retrieves the content of the file.
 
-4. Build a dictionary with the results.
-5. Serialize the dictionary to a json string and saves it to a file.
+4. Builds a dictionary with the results.
+5. Serializes the dictionary to a json string and saves it to a file.
 
 ## Run
 
