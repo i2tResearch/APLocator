@@ -57,4 +57,14 @@ Open the file and setup the gps and the output folder.
 
 ## Run
 
-From the terminal, run `python3 src/run.py some_identifier`
+### Test mode
+
+From the terminal, run `python3 src/run.py t`
+
+The test mode does not store the results.
+
+### Full mode
+
+From the terminal, run `python3 src/run.py some-identifier`
+
+The results will be stored in a file `some-identifier_YYYYMMDD_HHMMSS.json`
