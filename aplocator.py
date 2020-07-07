@@ -203,13 +203,14 @@ def main(output_file):
     print("longitude (dddmm.mmmmm)...........", location.lon, location.lon_d)
     print("altitude (m)......................", location.alt)
     print("satellites........................", location.satellites)
+    print("gngga", location.gngga_str)
     print("Access points:")
     print(raw_networks)
-    print("Access points details:")
-    print(iw)
+    #print("Access points details:")
+    #print(iw)
 
     final = {
-        "location": { "lat": location.lat, "latd": location.lat_d, "lon": location.lon, "lond": location.lon_d, "alt": location.alt, "sat": location.satellites },
+        "location": { "lat": location.lat, "latd": location.lat_d, "lon": location.lon, "lond": location.lon_d, "alt": location.alt, "sat": location.satellites, "full": location.gngga_str },
         "nmcli": networks,
         "iw": iw
     }
