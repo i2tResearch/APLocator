@@ -26,9 +26,10 @@ def main(output_file):
 
     location = provider.get_location()
 
-    nmcli_results = nmcli.run()
-    iw_results = iw.run(settings.tmp_cli_file)
+    nmcli_results = nmcli.run(dev_mode)
+    iw_results = iw.run(settings.tmp_cli_file, dev_mode)
 
+    print("\n[results]")
     print("location..........................", str(location))
     print("altitude (m)......................", location.alt)
     print("satellites........................", location.sats)
@@ -52,9 +53,6 @@ def main(output_file):
         "nmcli": nmcli_results,
         "iw": iw_results
     }
-
-    if dev_mode:
-        print(results_dict)
 
     if not test_mode:
         file_path = settings.output_folder + "/" + output_file

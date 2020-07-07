@@ -19,7 +19,7 @@ def _get_iw_command_result(filePath):
     return contents
 
 
-def run(filePath):
+def run(filePath, verbose = False):
     os.system(_get_iw_command(filePath))
     contents = _get_iw_command_result(filePath)
     results = []
@@ -36,5 +36,10 @@ def run(filePath):
             }
 
             results.append(item)
+
+    if verbose:
+        print("[iw]")
+        for r in results:
+            print(r)
 
     return results
