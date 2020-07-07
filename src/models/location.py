@@ -12,18 +12,38 @@ class Location(object):
         lon (str) -- longitude.
         lon_d (str) -- longitude direction.
         alt (float) -- altitude in meters.
-        satellites (int) -- number of satellites. default -1.
+        sats (int) -- number of satellites. default -1.
         raw (str) -- full GNGGA/GPGGA string. default None.
     """
 
-    def __init__(self, lat, lat_d, lon, lon_d, alt, satellites, raw=None):
+    def __init__(self, lat, lat_d, lon, lon_d, alt, qual, sats, raw=None):
         self.lat = lat
         self.lat_d = lat_d
         self.lon = lon
         self.lon_d = lon_d
         self.alt = alt
-        self.satellites = satellites
+        self.sats = sats
+        self.qual = qual
         self.raw = raw
+
+    def __str__(self):
+        lat = self.lat[0:2] + "º " + self.lat[2:] + "' " + self.lat_d
+        lon = self.lon[0:3] + "º " + self.lon[3:] + "' " + self.lon_d
+        return lat + " " + lon
+
+    def qual_description(self):
+        descriptions = {
+            0: "invalid",
+            1: "fixed",
+            2: "DGPS",
+            3: "PPS",
+            4: "Real time kinematic",
+            5: "Float RTK",
+            6: "Estimated",
+            7: "Manual input",
+            8: "Simulation"
+        }
+        return descriptions[self.qual]
 
     @classmethod
     def build_from_gngga(cls, raw):
@@ -63,6 +83,7 @@ class Location(object):
                 gps_params.lon if gps_params.lon != "" else "0",
                 gps_params.lon_dir if gps_params.lon_dir != "" else "W",
                 gps_params.altitude if gps_params.altitude is not None else 0,
+                gps_params.gps_qual if gps_params.gps_qual is not None else 0,
                 gps_params.num_sats if gps_params.num_sats != "" else "00",
                 raw
             )
