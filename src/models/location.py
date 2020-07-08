@@ -27,8 +27,8 @@ class Location(object):
         self.raw = raw
 
     def __str__(self):
-        lat = self.lat[0:2] + "º " + self.lat[2:] + "' " + self.lat_d
-        lon = self.lon[0:3] + "º " + self.lon[3:] + "' " + self.lon_d
+        lat = self.lat[0:2] + "° " + self.lat[2:] + "' " + self.lat_d
+        lon = self.lon[0:3] + "° " + self.lon[3:] + "' " + self.lon_d
         return lat + " " + lon
 
     def qual_description(self):

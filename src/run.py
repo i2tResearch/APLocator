@@ -67,9 +67,9 @@ def main(output_file):
 def print_help():
     print("GPS formats:")
     print("\t", "latitude: ddmm.mmmmm")
-    print("\t", "e.g. 0324,74169", "is:", "03º 24.74169'")
+    print("\t", "e.g. 0324,74169", "is:", "03° 24.74169'")
     print("\t", "longitude: dddmm.mmmmm")
-    print("\t", "e.g. 07631.58999", "is:", "076º 31.58999'")
+    print("\t", "e.g. 07631.58999", "is:", "076° 31.58999'")
 
     print("GPS quality:")
 
