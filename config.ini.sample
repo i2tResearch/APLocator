@@ -1,8 +1,8 @@
 [GPS]
-gps_device: bu353
-gps_port: /dev/ttyACM0
-gps_speed: 4800
-gps_timeout: 5
+device: bu353
+port: /dev/ttyACM0
+speed: 4800
+timeout: 5
 
 [Results]
 output_folder: /home/i2t/Dev/Output/APLocatorResults
